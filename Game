@@ -1,0 +1,112 @@
+import time,pygame,sys,os
+
+from pygame.locals import *
+
+pygame.init()
+
+print "Click Champion 2.5"
+ancho=400
+alto=400
+p = pygame.display.set_mode((ancho,alto))
+pygame.display.set_caption("Click Champion 2.0 - Ezequiel Gustavo Martinez")
+
+pc = p.copy()
+
+reca=pygame.Rect((150),(150),100,100)
+recb=pygame.Rect(0,0,1,1)
+
+clicks = 0
+
+reloj = pygame.time.Clock()
+t=pygame.time.get_ticks()
+
+fuente = pygame.font.SysFont("Arial",18,True,False)
+
+
+seg = 0
+while True:
+	
+	for event in pygame.event.get():
+		
+		mx,my = pygame.mouse.get_pos()
+		
+		if event.type == QUIT:
+			pygame.quit()
+			sys.exit()
+			
+		elif event.type == KEYDOWN:
+			if pygame.key.get_pressed()[K_ESCAPE]:
+				print "Salir"
+				pygame.quit()
+				sys.exit()
+				
+		elif event.type == MOUSEBUTTONDOWN:
+			
+			if pygame.mouse.get_pressed()[0]:
+				
+				if reca.colliderect(recb):				
+					clicks += 1
+					#print clicks, "clicks - click en el blanco"				
+				else:					
+					clicks = 0
+					#print clicks, "clicks - saliste del cuadrilatero"
+				
+	#segundos = pygame.time.get_ticks() / 1000
+	
+	time.sleep(0.01)
+	
+	seg += 0.012
+	
+	recb.left,recb.top = mx,my	
+	
+	p.fill((255,255,255))
+	
+	pygame.draw.rect(p,(50,0,150),reca,2)
+	pygame.draw.rect(p,(50,0,150),recb,0)
+	
+	texto = fuente.render("Hace clicks dentro del cuadrado",0,(0,0,0))
+	texto2 =  fuente.render("Tenes 10 segundos!",0,(0,0,0))
+	texto3 = fuente.render(str(int(seg))+" segundos",0,(0,0,0))
+	texto4 = fuente.render((str(clicks)+" clicks"),0,(0,0,0))
+	
+	p.blit(texto,(0,0))
+	p.blit(texto2,(0,18))
+	p.blit(texto3,(0,36))
+	p.blit(texto4,(0,54))
+	
+	pygame.display.update()
+	
+	#reloj.tick(20)
+	
+	if int(seg) == 10:
+		seg2=0
+			
+		while True:
+			
+			for event in pygame.event.get():
+				
+				if event.type == QUIT:
+					pygame.quit()
+					
+			
+			p.fill((255,255,255))
+			fin = fuente.render("GAME OVER",0,(0,0,0))
+			pun = fuente.render("puntaje total: "+(str(clicks)+" clicks"),0,(0,0,0))
+			
+			p.blit(fin,(100,100))
+			p.blit(pun,(100,136))
+			
+			pygame.display.update()
+			
+			time.sleep(0.01)
+		
+			seg2 += 0.012
+			
+			if int(seg2) == 5:
+				break
+			
+		clicks = 0
+		seg =0
+
+		
+print "game over"
